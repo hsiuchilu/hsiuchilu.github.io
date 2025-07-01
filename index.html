@@ -3,74 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hsiu-Chi Lu - Academic Profile</title>
+    <title>Hsiu-Chi Lu (呂修齊) Homepage</title>
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Noto Sans TC for Taiwanese characters and Poppins for a modern feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Feather Icons for simple, clean icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
     <style>
-        /* Custom CSS for Inter font and smooth scrolling */
+        /* Custom CSS for font families and color palette */
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Poppins', 'Noto Sans TC', sans-serif;
             scroll-behavior: smooth;
         }
+
+        /* Custom Taiwanese-inspired color palette with yellow */
+        :root {
+            --taiwan-yellow: #DAA520; /* A golden yellow inspired by rice fields or lanterns */
+            --taiwan-dark: #333333; /* A dark gray reminiscent of roof tiles */
+            --taiwan-light-bg: #F8F7F2; /* A warm, off-white background */
+        }
+
+        .text-taiwan-yellow { color: var(--taiwan-yellow); }
+        .bg-taiwan-yellow { background-color: var(--taiwan-yellow); }
+        .border-taiwan-yellow { border-color: var(--taiwan-yellow); }
+        
+        .text-taiwan-dark { color: var(--taiwan-dark); }
+        .bg-taiwan-dark { background-color: var(--taiwan-dark); }
+
+        .bg-taiwan-light { background-color: var(--taiwan-light-bg); }
+
+        /* Smooth transition for links */
         .nav-link {
-            cursor: pointer;
             transition: color 0.3s ease;
         }
-        .nav-link:hover {
-            color: #4f46e5; /* Indigo 600 */
-        }
-        /* Basic styling for sections for better visual separation */
+        
+        /* Add padding to sections for the fixed header */
         section {
-            padding-top: 4rem; /* To account for fixed header */
-            margin-top: -4rem; /* To make the scroll target accurate */
+            padding-top: 5rem;
+            margin-top: -4rem;
+        }
+        
+        /* Styles for expandable section */
+        .expandable-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+            opacity: 0;
+        }
+        .expandable-content.expanded {
+            max-height: 1000px; /* Large enough value */
+            opacity: 1;
+        }
+        .toggle-expand-btn svg {
+            transition: transform 0.3s ease;
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-taiwan-light text-taiwan-dark">
 
-    <!-- Header and Navigation - Consistent across all pages -->
-    <header class="bg-white shadow-sm fixed w-full z-50 py-4 px-6 md:px-12">
-        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
-            <h1 class="text-2xl font-bold text-gray-900 mb-2 md:mb-0">
-                Dr. Hsiu-Chi Lu</span>
-            </h1>
-            <nav>
-                <ul class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-lg font-medium">
-                    <li><a href="index.html" class="nav-link text-gray-700 hover:text-indigo-600 rounded-md px-3 py-2">About</a></li>
-                    <li><a href="research.html" class="nav-link text-gray-700 hover:text-indigo-600 rounded-md px-3 py-2">Research</a></li>
-                    <li><a href="publications.html" class="nav-link text-gray-700 hover:text-indigo-600 rounded-md px-3 py-2">Publications</a></li>
-                    <li><a href="teaching.html" class="nav-link text-gray-700 hover:text-indigo-600 rounded-md px-3 py-2">Teaching</a></li>
-                    <li><a href="contact.html" class="nav-link text-gray-700 hover:text-indigo-600 rounded-md px-3 py-2">Contact</a></li>
-                </ul>
+    <!-- Header and Navigation -->
+    <header class="bg-white/80 backdrop-blur-lg shadow-sm fixed w-full z-50 transition-all duration-300">
+        <div class="container mx-auto flex justify-between items-center p-4 md:px-8">
+            <a href="#home" class="text-xl md:text-2xl font-bold text-taiwan-yellow">
+                Hsiu-Chi Lu | 呂修齊
+            </a>
+            <nav class="hidden md:flex items-center space-x-6 text-base font-medium">
+                <a href="#about" class="nav-link text-gray-700 hover:text-taiwan-yellow">About</a>
+                <a href="publications.html" class="nav-link text-gray-700 hover:text-taiwan-yellow">Publications</a>
+                <a href="#contact" class="nav-link bg-taiwan-yellow text-white px-4 py-2 rounded-full hover:bg-opacity-90 transition-colors">Contact</a>
             </nav>
+            <button id="mobile-menu-button" class="md:hidden">
+                <i data-feather="menu" class="text-taiwan-dark"></i>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white p-4">
+             <a href="#about" class="block py-2 text-center nav-link text-gray-700 hover:text-taiwan-yellow">About</a>
+             <a href="publications.html" class="block py-2 text-center nav-link text-gray-700 hover:text-taiwan-yellow">Publications</a>
+             <a href="#contact" class="block mt-2 py-2 text-center nav-link bg-taiwan-yellow text-white rounded-full hover:bg-opacity-90 transition-colors">Contact</a>
         </div>
     </header>
 
-    <main class="container mx-auto px-6 md:px-12 py-24">
-        <!-- About Section -->
-        <section id="about" class="bg-white p-8 rounded-lg shadow-md mb-12 transform transition duration-300 hover:scale-[1.005]">
-            <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
-                <img src="https://placehold.co/200x200/6366f1/ffffff?text=Your+Photo" alt="Your Photo" class="w-48 h-48 rounded-full object-cover shadow-lg border-4 border-indigo-200">
-                <div class="text-center md:text-left">
-                    <h2 class="text-4xl font-extrabold text-gray-900 mb-4">About Me</h2>
-                    <p class="text-lg text-gray-700 leading-relaxed mb-4">
-                        Welcome to my academic profile! I am Hsiu-Chi, a [Your Title, e.g., Assistant Professor] in the Department of [Your Department] at [Your University]. My research primarily focuses on [Your primary research area], with a keen interest in [Secondary research area] and [Tertiary research area].
+    <main id="home" class="container mx-auto px-6 md:px-12 pt-24">
+
+        <!-- Hero Section -->
+        <section id="about" class="min-h-[80vh] flex items-center">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-8 items-center">
+                <div class="md:col-span-3 text-center md:text-left">
+                    <h1 class="text-4xl md:text-6xl font-bold text-taiwan-dark leading-tight">
+                       I am <br>Hsiu-Chi Lu (呂修齊)
+                    </h1>
+                    <p class="mt-6 text-lg text-gray-600 max-w-2xl">
+                     An incoming Taiwanese PhD student at Northeastern University under the guidance of <a href="https://www.lazerlab.net/people/david-lazer" rel="external nofollow noopener" target="_blank" class="text-taiwan-yellow hover:underline">Prof. David Lazer</a>. 
                     </p>
-                    <p class="text-lg text-gray-700 leading-relaxed">
-                        I am passionate about [something you are passionate about, e.g., developing innovative solutions for complex problems, mentoring students, interdisciplinary collaboration]. Feel free to explore my research, publications, and teaching philosophy.
-                    </p>
+                    <div class="mt-8 flex justify-center md:justify-start space-x-4">
+                        <a href="publications.html" class="bg-taiwan-yellow text-white font-semibold px-6 py-3 rounded-full shadow-lg hover:scale-105 transform transition-transform">Explore My Research</a>
+                        <a href="cv.pdf" target="_blank" class="bg-gray-200 text-taiwan-dark font-semibold px-6 py-3 rounded-full shadow-lg hover:scale-105 transform transition-transform">View CV</a>
+                    </div>
+                    <div class="mt-8 border-t pt-4 max-w-2xl">
+                        <button class="toggle-expand-btn text-gray-600 hover:text-taiwan-yellow font-semibold flex items-center w-full text-left">
+                            <span class="mr-1">More About Me</span>
+                            <i data-feather="chevron-down" class="w-4 h-4"></i>
+                        </button>
+                        <div class="expandable-content mt-2 text-gray-600">
+                            <p>Inspired by the concept of a <a href="https://www.nature.com/articles/nj7322-467a" class="text-taiwan-yellow hover:underline">A CV of Failures</a>, I believe in transparently sharing the setbacks that are an integral part of the academic journey.</p>
+                            <a href="cv_of_failures.html" class="text-taiwan-yellow hover:underline">My Failures</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:col-span-2 flex justify-center">
+                    <div class="bg-white p-4 rounded-full shadow-2xl">
+                        <img src="profile.jpg" alt="Hsiu-Chi Lu" class="w-64 h-64 md:w-80 md:h-80 rounded-full object-cover border-4 border-taiwan-yellow">
+                    </div>
                 </div>
             </div>
         </section>
+
+        <!-- News Section -->
+        <section id="news" class="py-20">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-bold text-center mb-12 text-taiwan-dark">Recent News</h2>
+                <div class="space-y-8">
+                    <!-- News Item 1 -->
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-24 text-right">
+                            <p class="font-semibold text-taiwan-dark">Sep. 2025</p>
+                        </div>
+                        <div class="border-l-2 border-taiwan-yellow pl-4">
+                            <p>Excited to start my PhD journey in Network Science at Northeastern University!</p>
+                        </div>
+                    </div>
+                    <!-- News Item 2 -->
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-24 text-right">
+                            <p class="font-semibold text-taiwan-dark">Jun. 2025</p>
+                        </div>
+                        <div class="border-l-2 border-taiwan-yellow pl-4">
+                            <p>Being over the moon about compeleting my Military Service!!!</p>
+                        </div>
+                    </div>
+                    <!-- News Item 3 -->
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-24 text-right">
+                            <p class="font-semibold text-taiwan-dark">Feb. 2025</p>
+                        </div>
+                        <div class="border-l-2 border-taiwan-yellow pl-4">
+                            <p>Starting my military journey with sorrow.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <!-- Footer - Consistent across all pages -->
-    <footer class="bg-gray-800 text-white py-8 px-6 md:px-12 text-center">
-        <div class="container mx-auto">
-            <p>&copy; 2024 Hsiu-Chi Lu All rights reserved.</p>
-            <p class="text-sm mt-2">Built with Tailwind CSS.</p>
+    <!-- Footer -->
+    <footer class="bg-taiwan-dark text-white mt-20">
+        <div id="contact" class="container mx-auto py-12 px-6 md:px-12 text-center">
+            <h3 class="text-3xl font-bold mb-4">Get In Touch</h3>
+            <p class="text-gray-300 mb-6 max-w-lg mx-auto">I'm open to collaborations and discussions. Feel free to reach out via email or connect with me on professional networks.</p>
+            <div class="flex justify-center space-x-6 mt-6">
+                <a href="mailto:hsiuchilu0528@gmail.com" class="text-gray-300 hover:text-taiwan-yellow transition-colors"><i data-feather="mail" class="w-8 h-8"></i></a>
+                <a href="https://x.com/lushu0528" class="text-gray-300 hover:text-taiwan-yellow transition-colors"><i data-feather="twitter" class="w-8 h-8"></i></a>
+                <a href="https://www.linkedin.com/in/hsiu-chi-lu-945825283" class="text-gray-300 hover:text-taiwan-yellow transition-colors"><i data-feather="linkedin" class="w-8 h-8"></i></a>
+                <a href="https://scholar.google.com.tw/citations?user=BRiVz5oAAAAJ&hl=en&authuser=1" class="text-gray-300 hover:text-taiwan-yellow transition-colors" title="Google Scholar">
+                    <!-- Google Scholar Icon (Graduation Cap) -->
+                    <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"></path>
+                        <path d="M6 12v5c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2v-5"></path>
+                    </svg>
+                </a>
+            </div>
+            <div class="mt-12 border-t border-gray-700 pt-8">
+                <p>&copy; 2024 Hsiu-Chi Lu (呂修齊). All rights reserved.</p>
+                <p class="text-sm text-gray-500 mt-2">Designed with inspiration from Taiwan.</p>
+            </div>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Call feather icons
+            feather.replace();
+
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Expandable "More About Me" section
+            const toggleBtn = document.querySelector('.toggle-expand-btn');
+            if (toggleBtn) {
+                const content = toggleBtn.nextElementSibling;
+                const icon = toggleBtn.querySelector('svg');
+                toggleBtn.addEventListener('click', () => {
+                    content.classList.toggle('expanded');
+                    if (content.classList.contains('expanded')) {
+                        icon.style.transform = 'rotate(180deg)';
+                    } else {
+                        icon.style.transform = 'rotate(0deg)';
+                    }
+                });
+            }
+        });
+    </script>
 
 </body>
 </html>
