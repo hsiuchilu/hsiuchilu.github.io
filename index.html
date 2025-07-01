@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. [Your Name] - Academic Profile</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS for Inter font and smooth scrolling */
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .nav-link {
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #4f46e5; /* Indigo 600 */
+        }
+        /* Basic styling for sections for better visual separation */
+        section {
+            padding-top: 4rem; /* To account for fixed header */
+            margin-top: -4rem; /* To make the scroll target accurate */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Header and Navigation -->
+    <header class="bg-white shadow-sm fixed w-full z-50 py-4 px-6 md:px-12">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <h1 class="text-2xl font-bold text-gray-900 mb-2 md:mb-0">
+                Dr. <span class="text-indigo-600">[Your Name]</span>
+            </h1>
+            <nav>
+                <ul class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-lg font-medium">
+                    <li><a href="#about" class="nav-link text-gray-700 hover:text-indigo-600 rounded-md px-3 py-2">About</a></li>
+                    <li><a href="#research" class="nav-link text-gray-700 hover:text-indigo-600 rounded-md px-3 py-2">Research</a></li>
+                    <li><a href="#publications" class="nav-link text-gray-700 hover:text-indigo-600 rounded-md px-3 py-2">Publications</a></li>
+                    <li><a href="#teaching" class="nav-link text-gray-700 hover:text-indigo-600 rounded-md px-3 py-2">Teaching</a></li>
+                    <li><a href="#contact" class="nav-link text-gray-700 hover:text-indigo-600 rounded-md px-3 py-2">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 md:px-12 py-24">
+        <!-- About Section -->
+        <section id="about" class="bg-white p-8 rounded-lg shadow-md mb-12 transform transition duration-300 hover:scale-[1.005]">
+            <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
+                <img src="https://placehold.co/200x200/6366f1/ffffff?text=Your+Photo" alt="Your Photo" class="w-48 h-48 rounded-full object-cover shadow-lg border-4 border-indigo-200">
+                <div class="text-center md:text-left">
+                    <h2 class="text-4xl font-extrabold text-gray-900 mb-4">About Me</h2>
+                    <p class="text-lg text-gray-700 leading-relaxed mb-4">
+                        Welcome to my academic profile! I am Dr. [Your Name], a [Your Title, e.g., Assistant Professor] in the Department of [Your Department] at [Your University]. My research primarily focuses on [Your primary research area], with a keen interest in [Secondary research area] and [Tertiary research area].
+                    </p>
+                    <p class="text-lg text-gray-700 leading-relaxed">
+                        I am passionate about [something you are passionate about, e.g., developing innovative solutions for complex problems, mentoring students, interdisciplinary collaboration]. Feel free to explore my research, publications, and teaching philosophy.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Research Section -->
+        <section id="research" class="bg-white p-8 rounded-lg shadow-md mb-12 transform transition duration-300 hover:scale-[1.005]">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-6 text-center">Research</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Research Project 1 -->
+                <div class="bg-indigo-50 p-6 rounded-lg shadow-sm border border-indigo-200">
+                    <h3 class="text-2xl font-semibold text-indigo-800 mb-3">Project Title 1: [Short Title]</h3>
+                    <p class="text-gray-700 mb-4">
+                        This project investigates [brief description of research project, e.g., the impact of climate change on biodiversity in urban environments]. It involves [methodologies, e.g., extensive fieldwork, data modeling, machine learning techniques].
+                    </p>
+                    <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
+                        Learn More
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                </div>
+                <!-- Research Project 2 -->
+                <div class="bg-indigo-50 p-6 rounded-lg shadow-sm border border-indigo-200">
+                    <h3 class="text-2xl font-semibold text-indigo-800 mb-3">Project Title 2: [Short Title]</h3>
+                    <p class="text-gray-700 mb-4">
+                        Focusing on [another research area, e.g., the development of novel algorithms for quantum computing], this work aims to [goal, e.g., enhance computational efficiency and security]. Collaborations with [Collaborator/Institution] are ongoing.
+                    </p>
+                    <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
+                        Learn More
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                </div>
+                <!-- Research Project 3 -->
+                <div class="bg-indigo-50 p-6 rounded-lg shadow-sm border border-indigo-200">
+                    <h3 class="text-2xl font-semibold text-indigo-800 mb-3">Project Title 3: [Short Title]</h3>
+                    <p class="text-gray-700 mb-4">
+                        This project explores [third research area, e.g., the socio-economic implications of artificial intelligence in healthcare]. It involves [research methods, e.g., qualitative analysis, policy recommendations, ethical considerations].
+                    </p>
+                    <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
+                        Learn More
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Publications Section -->
+        <section id="publications" class="bg-white p-8 rounded-lg shadow-md mb-12 transform transition duration-300 hover:scale-[1.005]">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-6 text-center">Publications</h2>
+            <ul class="space-y-6">
+                <!-- Publication 1 -->
+                <li class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                        <a href="#" class="text-indigo-700 hover:underline">
+                            "The Role of [Keyword] in [Field]: A Comprehensive Review"
+                        </a>
+                    </h3>
+                    <p class="text-gray-600 text-sm mb-2">
+                        [Your Name], J. Doe, A. Smith. <em>Journal of [Relevant Field]</em>, Vol. X, No. Y, pp. Z-AA, 2023.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Journal Article</span>
+                        <a href="#" class="bg-gray-200 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full hover:bg-gray-300">
+                            PDF
+                        </a>
+                        <a href="#" class="bg-gray-200 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full hover:bg-gray-300">
+                            DOI
+                        </a>
+                    </div>
+                </li>
+                <!-- Publication 2 -->
+                <li class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                        <a href="#" class="text-indigo-700 hover:underline">
+                            "Novel Approaches to [Problem]: An Experimental Study"
+                        </a>
+                    </h3>
+                    <p class="text-gray-600 text-sm mb-2">
+                        A. Smith, [Your Name], B. Johnson. <em>Proceedings of the [Conference Name]</em>, 2022.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Conference Paper</span>
+                        <a href="#" class="bg-gray-200 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full hover:bg-gray-300">
+                            PDF
+                        </a>
+                        <a href="#" class="bg-gray-200 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full hover:bg-gray-300">
+                            Slides
+                        </a>
+                    </div>
+                </li>
+                <!-- Publication 3 -->
+                <li class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                        <a href="#" class="text-indigo-700 hover:underline">
+                            "Book Chapter: [Chapter Title]"
+                        </a>
+                    </h3>
+                    <p class="text-gray-600 text-sm mb-2">
+                        [Your Name]. In: <em>[Book Title]</em>, Edited by C. Davis, D. Brown. Publisher Name, 2021.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Book Chapter</span>
+                        <a href="#" class="bg-gray-200 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full hover:bg-gray-300">
+                            Publisher Link
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Teaching Section -->
+        <section id="teaching" class="bg-white p-8 rounded-lg shadow-md mb-12 transform transition duration-300 hover:scale-[1.005]">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-6 text-center">Teaching</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Course 1 -->
+                <div class="bg-yellow-50 p-6 rounded-lg shadow-sm border border-yellow-200">
+                    <h3 class="text-2xl font-semibold text-yellow-800 mb-3">
+                        [Course Code] - [Course Name]
+                    </h3>
+                    <p class="text-gray-700 mb-2">
+                        <strong>University:</strong> [Your University]
+                    </p>
+                    <p class="text-gray-700 mb-2">
+                        <strong>Semesters Taught:</strong> Fall 2023, Spring 2022
+                    </p>
+                    <p class="text-gray-700">
+                        <strong>Description:</strong> An introductory course covering [brief description of course content, e.g., fundamental principles of data structures and algorithms].
+                    </p>
+                </div>
+                <!-- Course 2 -->
+                <div class="bg-yellow-50 p-6 rounded-lg shadow-sm border border-yellow-200">
+                    <h3 class="text-2xl font-semibold text-yellow-800 mb-3">
+                        [Course Code] - [Advanced Course Name]
+                    </h3>
+                    <p class="text-gray-700 mb-2">
+                        <strong>University:</strong> [Your University]
+                    </p>
+                    <p class="text-gray-700 mb-2">
+                        <strong>Semesters Taught:</strong> Spring 2024, Fall 2021
+                    </p>
+                    <p class="text-gray-700">
+                        <strong>Description:</strong> An advanced seminar on [brief description of course content, e.g., advanced topics in machine learning and neural networks].
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="bg-white p-8 rounded-lg shadow-md transform transition duration-300 hover:scale-[1.005]">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-6 text-center">Contact Me</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <p class="text-lg text-gray-700 mb-4">
+                        Feel free to reach out if you have any questions, collaboration opportunities, or just want to connect!
+                    </p>
+                    <ul class="space-y-3 text-lg text-gray-700">
+                        <li class="flex items-center">
+                            <svg class="w-6 h-6 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            Email: <a href="mailto:your.email@example.com" class="text-indigo-600 hover:underline ml-1">your.email@example.com</a>
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-6 h-6 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            Office: [Your Office Location, e.g., Building A, Room 101]
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-6 h-6 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-.758l-.293-.293m12.475-12.475l-4 4a4 4 0 00-5.656 0m5.656 5.656l-1.101 1.102m-.758-.758l-.293-.293"></path></svg>
+                            <a href="https://scholar.google.com/citations?user=YOUR_ID" target="_blank" class="text-indigo-600 hover:underline">Google Scholar</a>
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-6 h-6 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                            <a href="https://www.linkedin.com/in/yourprofile" target="_blank" class="text-indigo-600 hover:underline">LinkedIn</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Simple Contact Form (Optional) -->
+                <div class="p-6 bg-indigo-50 rounded-lg shadow-sm border border-indigo-200">
+                    <h3 class="text-2xl font-semibold text-indigo-800 mb-4">Send a Message</h3>
+                    <form action="#" method="POST" class="space-y-4">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                            <input type="text" id="name" name="name" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                            <input type="email" id="email" name="email" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+                            <textarea id="message" name="message" rows="4" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                            Send Message
+                        </button>
+                    </form>
+                    <p class="text-sm text-gray-500 mt-2">
+                        *Note: This form is for demonstration purposes. You'll need a backend service (e.g., Netlify Forms, Formspree, or a custom serverless function) to handle submissions.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 px-6 md:px-12 text-center">
+        <div class="container mx-auto">
+            <p>&copy; 2024 Dr. [Your Name]. All rights reserved.</p>
+            <p class="text-sm mt-2">Built with Tailwind CSS.</p>
+        </div>
+    </footer>
+
+    <script>
+        // JavaScript for smooth scrolling (optional, as CSS scroll-behavior handles most of it)
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
