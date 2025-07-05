@@ -8,6 +8,9 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- D3.js for the visualization and simulation -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
     <!-- Google Fonts: Noto Sans TC for Taiwanese characters and Poppins for a modern feel -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -64,6 +67,56 @@
         .toggle-expand-btn svg {
             transition: transform 0.3s ease;
         }
+
+        /* Styles for the D3 simulation */
+        .simulation-container {
+            width: 100%;
+            height: 600px;
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+            cursor: grab;
+        }
+        .node {
+            fill: var(--taiwan-yellow);
+            stroke: var(--taiwan-dark);
+            stroke-width: 2px;
+        }
+        .link {
+            stroke: #9ca3af;
+            stroke-opacity: 0.6;
+        }
+        /* Style for the slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8px;
+            cursor: pointer;
+            background: #e2e8f0;
+            border-radius: 5px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: var(--taiwan-yellow);
+            cursor: pointer;
+            margin-top: -6px;
+        }
+        .model-btn.active {
+            background-color: var(--taiwan-yellow);
+            color: white;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body class="bg-taiwan-light text-taiwan-dark">
@@ -98,10 +151,16 @@
             <div class="grid grid-cols-1 md:grid-cols-5 gap-8 items-center">
                 <div class="md:col-span-3 text-center md:text-left">
                     <h1 class="text-4xl md:text-6xl font-bold text-taiwan-dark leading-tight">
-                       I am <br>Hsiu-Chi Lu <br>(呂修齊)
+                       I am <br>Hsiu-Chi Lu<br> (呂修齊)
                     </h1>
                     <p class="mt-6 text-lg text-gray-600 max-w-2xl">
-                     An incoming Taiwanese PhD student at Northeastern University under the guidance of <a href="https://www.lazerlab.net/people/david-lazer" rel="external nofollow noopener" target="_blank" class="text-taiwan-yellow hover:underline">Prof. David Lazer</a>. 
+                        I am a network scientist from Taiwan and an incoming PhD student at Northeastern University, where I will be advised by <a href="https://www.lazerlab.net/people/david-lazer" rel="external nofollow noopener" target="_blank" class="text-taiwan-yellow hover:underline">Prof. David Lazer</a>. Previously, I received my Master's degree from National Chengchi University, mentored by <a href="https://sites.google.com/view/hsuanweilee/home" rel="external nofollow noopener" target="_blank" class="text-taiwan-yellow hover:underline">Prof. Hsuan-Wei Lee</a> and <a href="https://sociology.nccu.edu.tw/PageStaffing/Detail?fid=588&id=781" rel="external nofollow noopener" target="_blank" class="text-taiwan-yellow hover:underline">Prof. Jen-Hao Chen</a>.
+                    </p>
+                    <p class="mt-4 text-lg text-gray-600 max-w-2xl">
+                        My research integrates computational social science and network science to address pressing digital challenges. I focus on understanding and mitigating issues like online polarization and the spread of misinformation by applying interdisciplinary methods from computer science, mathematics, and the social sciences.
+                    </p>
+                    <p class="mt-4 text-lg text-gray-600 max-w-2xl">
+                        I welcome inquiries about my work and potential collaborations.
                     </p>
                     <div class="mt-8 flex justify-center md:justify-start space-x-4">
                         <a href="publications.html" class="bg-taiwan-yellow text-white font-semibold px-6 py-3 rounded-full shadow-lg hover:scale-105 transform transition-transform">Explore My Research</a>
@@ -113,7 +172,7 @@
                             <i data-feather="chevron-down" class="w-4 h-4"></i>
                         </button>
                         <div class="expandable-content mt-2 text-gray-600">
-                            <p>I believe in transparently sharing the setbacks that are an integral part of the academic journey. See <a href="cv_of_failures.html" class="text-taiwan-yellow hover:underline">My Failures</a> for the list of my failures. </p>
+                            <p>I believe in transparently sharing the setbacks that are an integral part of the academic journey. See <a href="cv_of_failures.html" class="text-taiwan-yellow hover:underline">My Failures</a> for the list of my failures
                         </div>
                     </div>
                 </div>
@@ -158,6 +217,51 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
+        
+        <!-- Interactive Simulation Section -->
+        <section id="simulation" class="py-20">
+            <div class="w-full max-w-4xl mx-auto text-center">
+                <h2 class="text-4xl font-bold text-taiwan-dark">Interactive Network Models</h2>
+                <p class="text-lg text-gray-600 mt-2">Choose a model to explore fundamental concepts in network science.</p>
+                
+                <div class="my-6">
+                    <!-- Model Selection Buttons -->
+                    <div class="inline-flex rounded-lg shadow-sm" role="group">
+                        <button id="small-world-btn" type="button" class="model-btn active rounded-l-lg border border-gray-200 bg-white text-sm font-medium px-4 py-2 text-gray-900 hover:bg-gray-100 focus:z-10 focus:ring-2 focus:ring-yellow-500">
+                            Small-World
+                        </button>
+                        <button id="scale-free-btn" type="button" class="model-btn -ml-px border border-gray-200 bg-white text-sm font-medium px-4 py-2 text-gray-900 hover:bg-gray-100 focus:z-10 focus:ring-2 focus:ring-yellow-500">
+                            Scale-Free
+                        </button>
+                        <button id="reset-btn" class="rounded-r-lg border border-gray-200 bg-gray-200 text-sm font-medium px-4 py-2 text-gray-800 hover:bg-gray-300 focus:z-10 focus:ring-2 focus:ring-yellow-500">
+                            Reset
+                        </button>
+                    </div>
+
+                    <!-- Contextual Controls -->
+                    <div id="controls-container" class="mt-4 h-12 flex items-center justify-center">
+                        <div id="small-world-controls" class="flex items-center justify-center space-x-4 w-full">
+                            <label for="rewire-slider" class="font-semibold">Rewire Probability (p):</label>
+                            <input id="rewire-slider" type="range" min="0" max="1" step="0.01" value="0" class="w-64">
+                            <span id="p-value" class="font-mono font-semibold w-12">0.00</span>
+                        </div>
+                        <div id="scale-free-controls" class="hidden w-full">
+                             <button id="add-node-btn" class="bg-taiwan-yellow text-white font-semibold px-6 py-2 rounded-full shadow-lg hover:bg-opacity-90 transform transition-all hover:scale-105">
+                                Add a Node
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Network Stats Display -->
+                     <div id="stats-container" class="mt-4 h-6 text-sm text-gray-600">
+                        <span>Average Path Length: <strong id="avg-path-length-val" class="font-mono text-lg text-taiwan-dark">...</strong></span>
+                    </div>
+                </div>
+        
+                <!-- This is where the D3 simulation will be rendered -->
+                <div id="simulation-canvas" class="simulation-container"></div>
             </div>
         </section>
 
@@ -214,6 +318,238 @@
                         icon.style.transform = 'rotate(0deg)';
                     }
                 });
+            }
+
+            // --- D3.js Network Simulation Script ---
+            const simContainer = document.getElementById('simulation-canvas');
+            if (simContainer) {
+                let currentModel = 'small-world'; // 'small-world' or 'scale-free'
+
+                const width = simContainer.clientWidth;
+                const height = simContainer.clientHeight;
+
+                const svg = d3.select("#simulation-canvas")
+                    .append("svg")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .call(d3.zoom().on("zoom", (event) => g.attr("transform", event.transform)))
+                    .append("g");
+                
+                const g = svg.append("g");
+
+                const simulation = d3.forceSimulation()
+                    .force("link", d3.forceLink().id(d => d.id))
+                    .force("charge", d3.forceManyBody().strength(-120))
+                    .force("center", d3.forceCenter(width / 2, height / 2));
+
+                let nodes = [];
+                let links = [];
+                let link, node;
+                
+                // --- Path Length Calculation ---
+                function calculateAveragePathLength(nodes, links) {
+                    if (nodes.length < 2) return 0;
+
+                    const N = nodes.length;
+                    const adj = new Map();
+                    nodes.forEach(node => adj.set(node.id, []));
+                    links.forEach(link => {
+                        const sourceId = link.source.id ?? link.source;
+                        const targetId = link.target.id ?? link.target;
+                        adj.get(sourceId).push(targetId);
+                        adj.get(targetId).push(sourceId);
+                    });
+
+                    let totalDistance = 0;
+
+                    for (const startNode of nodes) {
+                        const startNodeId = startNode.id;
+                        const distances = new Map();
+                        nodes.forEach(n => distances.set(n.id, Infinity));
+                        distances.set(startNodeId, 0);
+
+                        const queue = [startNodeId];
+                        let head = 0;
+
+                        while (head < queue.length) {
+                            const u = queue[head++];
+                            const neighbors = adj.get(u);
+                            for (const v of neighbors) {
+                                if (distances.get(v) === Infinity) {
+                                    distances.set(v, distances.get(u) + 1);
+                                    queue.push(v);
+                                }
+                            }
+                        }
+                        
+                        let sumOfDistances = 0;
+                        let isConnected = true;
+                        distances.forEach(dist => {
+                            if (dist === Infinity) {
+                                isConnected = false;
+                            } else {
+                                sumOfDistances += dist;
+                            }
+                        });
+
+                        if (!isConnected) return Infinity; // Graph is not connected
+
+                        totalDistance += sumOfDistances;
+                    }
+                    
+                    return totalDistance / (N * (N - 1));
+                }
+
+                // --- Model Generation Functions ---
+                function createSmallWorldNetwork(p = 0) {
+                    const N = 40; // Number of nodes
+                    const K = 4;  // Number of nearest neighbors
+                    nodes = d3.range(N).map(i => ({id: i}));
+                    links = [];
+                    for (let i = 0; i < N; i++) {
+                        for (let j = 1; j <= K / 2; j++) {
+                            const target = (i + j) % N;
+                            links.push({source: i, target: target});
+                        }
+                    }
+                    // Rewire logic
+                    for (const link of links) {
+                        if (Math.random() < p) {
+                            const sourceNode = link.source;
+                            let newTarget;
+                            do {
+                                newTarget = Math.floor(Math.random() * N);
+                            } while (newTarget === sourceNode || links.some(l => (l.source === sourceNode && l.target === newTarget) || (l.source === newTarget && l.target === sourceNode)));
+                            link.target = newTarget;
+                        }
+                    }
+                    simulation.force("link").distance(30).strength(0.5);
+                    update();
+                }
+
+                function createScaleFreeNetwork() {
+                    nodes = [{ id: 0, degree: 1 }, { id: 1, degree: 1 }];
+                    links = [{ source: 0, target: 1 }];
+                    simulation.force("link").distance(50).strength(1);
+                    update();
+                }
+
+                function addScaleFreeNode() {
+                    if (currentModel !== 'scale-free' || nodes.length >= 100) return;
+                    const newNodeId = nodes.length;
+                    const newNode = { id: newNodeId, degree: 0 };
+                    
+                    const targets = [];
+                    nodes.forEach(n => {
+                        for (let i = 0; i < n.degree; i++) {
+                            targets.push(n.id);
+                        }
+                    });
+
+                    if (targets.length > 0) {
+                        const targetNodeId = targets[Math.floor(Math.random() * targets.length)];
+                        const targetNode = nodes.find(n => n.id === targetNodeId);
+                        nodes.push(newNode);
+                        links.push({ source: newNodeId, target: targetNodeId });
+                        newNode.degree++;
+                        targetNode.degree++;
+                        update();
+                    }
+                }
+
+                // --- D3 Update and Drawing ---
+                function update() {
+                    link = g.selectAll(".link").data(links, d => `${d.source.id}-${d.target.id}`);
+                    link.exit().remove();
+                    const linkEnter = link.enter().append("line").attr("class", "link");
+                    link = linkEnter.merge(link);
+
+                    node = g.selectAll(".node").data(nodes, d => d.id);
+                    node.exit().remove();
+                    const nodeEnter = node.enter().append("circle")
+                        .attr("class", "node")
+                        .call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
+                    nodeEnter.append("title").text(d => `Node ID: ${d.id}`);
+                    node = nodeEnter.merge(node);
+                    
+                    node.transition().duration(200)
+                        .attr("r", d => currentModel === 'scale-free' ? 5 + Math.sqrt(d.degree) * 2 : 6);
+
+                    simulation.nodes(nodes).on("tick", ticked);
+                    simulation.force("link").links(links);
+                    simulation.alpha(1).restart();
+                    
+                    // Calculate and display stats
+                    const avgPathLength = calculateAveragePathLength(nodes, links);
+                    const statsDisplay = document.getElementById("avg-path-length-val");
+                    if (avgPathLength === Infinity) {
+                        statsDisplay.textContent = "N/A";
+                    } else {
+                        statsDisplay.textContent = avgPathLength.toFixed(2);
+                    }
+                }
+
+                function ticked() {
+                    link.attr("x1", d => d.source.x).attr("y1", d => d.source.y)
+                        .attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+                    node.attr("cx", d => d.x).attr("cy", d => d.y);
+                }
+
+                // --- UI Controls ---
+                const smallWorldBtn = document.getElementById("small-world-btn");
+                const scaleFreeBtn = document.getElementById("scale-free-btn");
+                const smallWorldControls = document.getElementById("small-world-controls");
+                const scaleFreeControls = document.getElementById("scale-free-controls");
+                const slider = document.getElementById("rewire-slider");
+                const pValueSpan = document.getElementById("p-value");
+
+                function setModel(model) {
+                    currentModel = model;
+                    if (model === 'small-world') {
+                        smallWorldBtn.classList.add('active');
+                        scaleFreeBtn.classList.remove('active');
+                        smallWorldControls.classList.remove('hidden');
+                        scaleFreeControls.classList.add('hidden');
+                        slider.value = 0;
+                        pValueSpan.textContent = "0.00";
+                        createSmallWorldNetwork(0);
+                    } else { // scale-free
+                        scaleFreeBtn.classList.add('active');
+                        smallWorldBtn.classList.remove('active');
+                        scaleFreeControls.classList.remove('hidden');
+                        smallWorldControls.classList.add('hidden');
+                        createScaleFreeNetwork();
+                    }
+                }
+
+                smallWorldBtn.addEventListener('click', () => setModel('small-world'));
+                scaleFreeBtn.addEventListener('click', () => setModel('scale-free'));
+                document.getElementById("add-node-btn").addEventListener("click", addScaleFreeNode);
+                document.getElementById("reset-btn").addEventListener("click", () => setModel(currentModel));
+                slider.addEventListener("input", (event) => {
+                    const p = +event.target.value;
+                    pValueSpan.textContent = p.toFixed(2);
+                    createSmallWorldNetwork(p);
+                });
+
+                // --- Drag Functions ---
+                function dragstarted(event, d) {
+                    if (!event.active) simulation.alphaTarget(0.3).restart();
+                    d.fx = d.x;
+                    d.fy = d.y;
+                }
+                function dragged(event, d) {
+                    d.fx = event.x;
+                    d.fy = event.y;
+                }
+                function dragended(event, d) {
+                    if (!event.active) simulation.alphaTarget(0);
+                    d.fx = null;
+                    d.fy = null;
+                }
+
+                // Initial setup
+                setModel('small-world');
             }
         });
     </script>
