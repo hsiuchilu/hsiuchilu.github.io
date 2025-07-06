@@ -285,14 +285,67 @@
                 </a>
             </div>
             <div class="mt-12 border-t border-gray-700 pt-8">
-                <p>&copy; 2024 Hsiu-Chi Lu (呂修齊). All rights reserved.</p>
+                <div class="text-sm text-gray-400">
+                    <span id="visitor-stats">Loading visitor info...</span>
+                </div>
+                <p class="mt-4">&copy; 2024 Hsiu-Chi Lu (呂修齊). All rights reserved.</p>
                 <p class="text-sm text-gray-500 mt-2">Designed with inspiration from Taiwan.</p>
             </div>
         </div>
     </footer>
 
-    <script>
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- Firebase & Visitor Stats Logic ---
+        async function initVisitorStats() {
+            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+            if (!firebaseConfig) {
+                console.error("Firebase config not found.");
+                document.getElementById('visitor-stats').textContent = 'Visitor stats unavailable.';
+                return;
+            }
+
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const db = getFirestore(app);
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+            try {
+                if (typeof __initial_auth_token !== 'undefined') {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                const statsRef = doc(db, `artifacts/${appId}/public/data/pagestats`, "homepage");
+                
+                // Increment the view count and get the latest value
+                await setDoc(statsRef, { views: increment(1) }, { merge: true });
+                const docSnap = await getDoc(statsRef);
+                const viewCount = docSnap.exists() ? docSnap.data().views : 1;
+
+                // Fetch visitor location
+                const geoResponse = await fetch('https://ipapi.co/json/');
+                const geoData = await geoResponse.json();
+                const location = (geoData.city && geoData.country_name) ? `${geoData.city}, ${geoData.country_name}` : 'an unknown location';
+
+                // Update the UI
+                document.getElementById('visitor-stats').textContent = `Views: ${viewCount} | Welcome, visitor from ${location}!`;
+
+            } catch (error) {
+                console.error("Error initializing visitor stats:", error);
+                document.getElementById('visitor-stats').textContent = 'Could not load visitor stats.';
+            }
+        }
+        
+        // --- General DOMContentLoaded ---
         document.addEventListener('DOMContentLoaded', () => {
+            initVisitorStats();
+            
             // Call feather icons
             feather.replace();
 
@@ -331,11 +384,13 @@
                 const svg = d3.select("#simulation-canvas")
                     .append("svg")
                     .attr("width", width)
-                    .attr("height", height)
-                    .call(d3.zoom().on("zoom", (event) => g.attr("transform", event.transform)))
-                    .append("g");
+                    .attr("height", height);
                 
                 const g = svg.append("g");
+                
+                svg.call(d3.zoom().on("zoom", (event) => {
+                    g.attr("transform", event.transform);
+                }));
 
                 const simulation = d3.forceSimulation()
                     .force("link", d3.forceLink().id(d => d.id))
@@ -459,7 +514,7 @@
 
                 // --- D3 Update and Drawing ---
                 function update() {
-                    link = g.selectAll(".link").data(links, d => `${d.source.id}-${d.target.id}`);
+                    link = g.selectAll(".link").data(links, d => `${d.source.id ?? d.source}-${d.target.id ?? d.target}`);
                     link.exit().remove();
                     const linkEnter = link.enter().append("line").attr("class", "link");
                     link = linkEnter.merge(link);
