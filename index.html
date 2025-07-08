@@ -295,319 +295,83 @@
     </footer>
 
     <!-- Firebase SDKs -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+<script>
+    // --- Visitor Stats Logic ---
+    async function initVisitorStats() {
+        try {
+            // This URL points to your new serverless function
+            const response = await fetch('/api/visitor-stats');
+            const data = await response.json();
 
-        // --- Firebase & Visitor Stats Logic ---
-        async function initVisitorStats() {
-            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
-            if (!firebaseConfig) {
-                console.error("Firebase config not found.");
-                document.getElementById('visitor-stats').textContent = 'Visitor stats unavailable.';
-                return;
-            }
+            // Update the UI with the data received from the function
+            document.getElementById('visitor-stats').textContent = `Views: ${data.views} | Welcome, visitor from ${data.location}!`;
 
-            const app = initializeApp(firebaseConfig);
-            const auth = getAuth(app);
-            const db = getFirestore(app);
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
-            try {
-                if (typeof __initial_auth_token !== 'undefined') {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-
-                const statsRef = doc(db, `artifacts/${appId}/public/data/pagestats`, "homepage");
-                
-                // Increment the view count and get the latest value
-                await setDoc(statsRef, { views: increment(1) }, { merge: true });
-                const docSnap = await getDoc(statsRef);
-                const viewCount = docSnap.exists() ? docSnap.data().views : 1;
-
-                // Fetch visitor location
-                const geoResponse = await fetch('https://ipapi.co/json/');
-                const geoData = await geoResponse.json();
-                const location = (geoData.city && geoData.country_name) ? `${geoData.city}, ${geoData.country_name}` : 'an unknown location';
-
-                // Update the UI
-                document.getElementById('visitor-stats').textContent = `Views: ${viewCount} | Welcome, visitor from ${location}!`;
-
-            } catch (error) {
-                console.error("Error initializing visitor stats:", error);
-                document.getElementById('visitor-stats').textContent = 'Could not load visitor stats.';
-            }
+        } catch (error) {
+            console.error("Error fetching visitor stats:", error);
+            document.getElementById('visitor-stats').textContent = 'Visitor stats unavailable.';
         }
+    }
+    
+    // --- General DOMContentLoaded ---
+    document.addEventListener('DOMContentLoaded', () => {
+        initVisitorStats();
         
-        // --- General DOMContentLoaded ---
-        document.addEventListener('DOMContentLoaded', () => {
-            initVisitorStats();
-            
-            // Call feather icons
-            feather.replace();
+        // The rest of your existing script remains the same...
+        feather.replace();
 
-            // Mobile menu toggle
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            if (mobileMenuButton) {
-                mobileMenuButton.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('hidden');
-                });
-            }
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
 
-            // Expandable "More About Me" section
-            const toggleBtn = document.querySelector('.toggle-expand-btn');
-            if (toggleBtn) {
-                const content = toggleBtn.nextElementSibling;
-                const icon = toggleBtn.querySelector('svg');
-                toggleBtn.addEventListener('click', () => {
-                    content.classList.toggle('expanded');
-                    if (content.classList.contains('expanded')) {
-                        icon.style.transform = 'rotate(180deg)';
-                    } else {
-                        icon.style.transform = 'rotate(0deg)';
-                    }
-                });
-            }
-
-            // --- D3.js Network Simulation Script ---
-            const simContainer = document.getElementById('simulation-canvas');
-            if (simContainer) {
-                let currentModel = 'small-world'; // 'small-world' or 'scale-free'
-
-                const width = simContainer.clientWidth;
-                const height = simContainer.clientHeight;
-
-                const svg = d3.select("#simulation-canvas")
-                    .append("svg")
-                    .attr("width", width)
-                    .attr("height", height);
-                
-                const g = svg.append("g");
-                
-                svg.call(d3.zoom().on("zoom", (event) => {
-                    g.attr("transform", event.transform);
-                }));
-
-                const simulation = d3.forceSimulation()
-                    .force("link", d3.forceLink().id(d => d.id))
-                    .force("charge", d3.forceManyBody().strength(-120))
-                    .force("center", d3.forceCenter(width / 2, height / 2));
-
-                let nodes = [];
-                let links = [];
-                let link, node;
-                
-                // --- Path Length Calculation ---
-                function calculateAveragePathLength(nodes, links) {
-                    if (nodes.length < 2) return 0;
-
-                    const N = nodes.length;
-                    const adj = new Map();
-                    nodes.forEach(node => adj.set(node.id, []));
-                    links.forEach(link => {
-                        const sourceId = link.source.id ?? link.source;
-                        const targetId = link.target.id ?? link.target;
-                        adj.get(sourceId).push(targetId);
-                        adj.get(targetId).push(sourceId);
-                    });
-
-                    let totalDistance = 0;
-
-                    for (const startNode of nodes) {
-                        const startNodeId = startNode.id;
-                        const distances = new Map();
-                        nodes.forEach(n => distances.set(n.id, Infinity));
-                        distances.set(startNodeId, 0);
-
-                        const queue = [startNodeId];
-                        let head = 0;
-
-                        while (head < queue.length) {
-                            const u = queue[head++];
-                            const neighbors = adj.get(u);
-                            for (const v of neighbors) {
-                                if (distances.get(v) === Infinity) {
-                                    distances.set(v, distances.get(u) + 1);
-                                    queue.push(v);
-                                }
-                            }
-                        }
-                        
-                        let sumOfDistances = 0;
-                        let isConnected = true;
-                        distances.forEach(dist => {
-                            if (dist === Infinity) {
-                                isConnected = false;
-                            } else {
-                                sumOfDistances += dist;
-                            }
-                        });
-
-                        if (!isConnected) return Infinity; // Graph is not connected
-
-                        totalDistance += sumOfDistances;
-                    }
-                    
-                    return totalDistance / (N * (N - 1));
+        const toggleBtn = document.querySelector('.toggle-expand-btn');
+        if (toggleBtn) {
+            const content = toggleBtn.nextElementSibling;
+            const icon = toggleBtn.querySelector('svg');
+            toggleBtn.addEventListener('click', () => {
+                content.classList.toggle('expanded');
+                if (content.classList.contains('expanded')) {
+                    icon.style.transform = 'rotate(180deg)';
+                } else {
+                    icon.style.transform = 'rotate(0deg)';
                 }
+            });
+        }
 
-                // --- Model Generation Functions ---
-                function createSmallWorldNetwork(p = 0) {
-                    const N = 40; // Number of nodes
-                    const K = 4;  // Number of nearest neighbors
-                    nodes = d3.range(N).map(i => ({id: i}));
-                    links = [];
-                    for (let i = 0; i < N; i++) {
-                        for (let j = 1; j <= K / 2; j++) {
-                            const target = (i + j) % N;
-                            links.push({source: i, target: target});
-                        }
-                    }
-                    // Rewire logic
-                    for (const link of links) {
-                        if (Math.random() < p) {
-                            const sourceNode = link.source;
-                            let newTarget;
-                            do {
-                                newTarget = Math.floor(Math.random() * N);
-                            } while (newTarget === sourceNode || links.some(l => (l.source === sourceNode && l.target === newTarget) || (l.source === newTarget && l.target === sourceNode)));
-                            link.target = newTarget;
-                        }
-                    }
-                    simulation.force("link").distance(30).strength(0.5);
-                    update();
-                }
-
-                function createScaleFreeNetwork() {
-                    nodes = [{ id: 0, degree: 1 }, { id: 1, degree: 1 }];
-                    links = [{ source: 0, target: 1 }];
-                    simulation.force("link").distance(50).strength(1);
-                    update();
-                }
-
-                function addScaleFreeNode() {
-                    if (currentModel !== 'scale-free' || nodes.length >= 100) return;
-                    const newNodeId = nodes.length;
-                    const newNode = { id: newNodeId, degree: 0 };
-                    
-                    const targets = [];
-                    nodes.forEach(n => {
-                        for (let i = 0; i < n.degree; i++) {
-                            targets.push(n.id);
-                        }
-                    });
-
-                    if (targets.length > 0) {
-                        const targetNodeId = targets[Math.floor(Math.random() * targets.length)];
-                        const targetNode = nodes.find(n => n.id === targetNodeId);
-                        nodes.push(newNode);
-                        links.push({ source: newNodeId, target: targetNodeId });
-                        newNode.degree++;
-                        targetNode.degree++;
-                        update();
-                    }
-                }
-
-                // --- D3 Update and Drawing ---
-                function update() {
-                    link = g.selectAll(".link").data(links, d => `${d.source.id ?? d.source}-${d.target.id ?? d.target}`);
-                    link.exit().remove();
-                    const linkEnter = link.enter().append("line").attr("class", "link");
-                    link = linkEnter.merge(link);
-
-                    node = g.selectAll(".node").data(nodes, d => d.id);
-                    node.exit().remove();
-                    const nodeEnter = node.enter().append("circle")
-                        .attr("class", "node")
-                        .call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
-                    nodeEnter.append("title").text(d => `Node ID: ${d.id}`);
-                    node = nodeEnter.merge(node);
-                    
-                    node.transition().duration(200)
-                        .attr("r", d => currentModel === 'scale-free' ? 5 + Math.sqrt(d.degree) * 2 : 6);
-
-                    simulation.nodes(nodes).on("tick", ticked);
-                    simulation.force("link").links(links);
-                    simulation.alpha(1).restart();
-                    
-                    // Calculate and display stats
-                    const avgPathLength = calculateAveragePathLength(nodes, links);
-                    const statsDisplay = document.getElementById("avg-path-length-val");
-                    if (avgPathLength === Infinity) {
-                        statsDisplay.textContent = "N/A";
-                    } else {
-                        statsDisplay.textContent = avgPathLength.toFixed(2);
-                    }
-                }
-
-                function ticked() {
-                    link.attr("x1", d => d.source.x).attr("y1", d => d.source.y)
-                        .attr("x2", d => d.target.x).attr("y2", d => d.target.y);
-                    node.attr("cx", d => d.x).attr("cy", d => d.y);
-                }
-
-                // --- UI Controls ---
-                const smallWorldBtn = document.getElementById("small-world-btn");
-                const scaleFreeBtn = document.getElementById("scale-free-btn");
-                const smallWorldControls = document.getElementById("small-world-controls");
-                const scaleFreeControls = document.getElementById("scale-free-controls");
-                const slider = document.getElementById("rewire-slider");
-                const pValueSpan = document.getElementById("p-value");
-
-                function setModel(model) {
-                    currentModel = model;
-                    if (model === 'small-world') {
-                        smallWorldBtn.classList.add('active');
-                        scaleFreeBtn.classList.remove('active');
-                        smallWorldControls.classList.remove('hidden');
-                        scaleFreeControls.classList.add('hidden');
-                        slider.value = 0;
-                        pValueSpan.textContent = "0.00";
-                        createSmallWorldNetwork(0);
-                    } else { // scale-free
-                        scaleFreeBtn.classList.add('active');
-                        smallWorldBtn.classList.remove('active');
-                        scaleFreeControls.classList.remove('hidden');
-                        smallWorldControls.classList.add('hidden');
-                        createScaleFreeNetwork();
-                    }
-                }
-
-                smallWorldBtn.addEventListener('click', () => setModel('small-world'));
-                scaleFreeBtn.addEventListener('click', () => setModel('scale-free'));
-                document.getElementById("add-node-btn").addEventListener("click", addScaleFreeNode);
-                document.getElementById("reset-btn").addEventListener("click", () => setModel(currentModel));
-                slider.addEventListener("input", (event) => {
-                    const p = +event.target.value;
-                    pValueSpan.textContent = p.toFixed(2);
-                    createSmallWorldNetwork(p);
-                });
-
-                // --- Drag Functions ---
-                function dragstarted(event, d) {
-                    if (!event.active) simulation.alphaTarget(0.3).restart();
-                    d.fx = d.x;
-                    d.fy = d.y;
-                }
-                function dragged(event, d) {
-                    d.fx = event.x;
-                    d.fy = event.y;
-                }
-                function dragended(event, d) {
-                    if (!event.active) simulation.alphaTarget(0);
-                    d.fx = null;
-                    d.fy = null;
-                }
-
-                // Initial setup
-                setModel('small-world');
-            }
-        });
-    </script>
+        const simContainer = document.getElementById('simulation-canvas');
+        if (simContainer) {
+            // All the D3 simulation code remains here...
+            let currentModel = 'small-world';
+            const width = simContainer.clientWidth;
+            const height = simContainer.clientHeight;
+            const svg = d3.select("#simulation-canvas").append("svg").attr("width", width).attr("height", height);
+            const g = svg.append("g");
+            svg.call(d3.zoom().on("zoom", (event) => g.attr("transform", event.transform)));
+            const simulation = d3.forceSimulation().force("link", d3.forceLink().id(d => d.id)).force("charge", d3.forceManyBody().strength(-120)).force("center", d3.forceCenter(width / 2, height / 2));
+            let nodes = [], links = [], link, node;
+            function calculateAveragePathLength(nodes, links) { if (nodes.length < 2) return 0; const N = nodes.length; const adj = new Map(); nodes.forEach(node => adj.set(node.id, [])); links.forEach(link => { const sourceId = link.source.id ?? link.source; const targetId = link.target.id ?? link.target; adj.get(sourceId).push(targetId); adj.get(targetId).push(sourceId); }); let totalDistance = 0; for (const startNode of nodes) { const startNodeId = startNode.id; const distances = new Map(); nodes.forEach(n => distances.set(n.id, Infinity)); distances.set(startNodeId, 0); const queue = [startNodeId]; let head = 0; while (head < queue.length) { const u = queue[head++]; const neighbors = adj.get(u); for (const v of neighbors) { if (distances.get(v) === Infinity) { distances.set(v, distances.get(u) + 1); queue.push(v); } } } let sumOfDistances = 0; let isConnected = true; distances.forEach(dist => { if (dist === Infinity) { isConnected = false; } else { sumOfDistances += dist; } }); if (!isConnected) return Infinity; totalDistance += sumOfDistances; } return totalDistance / (N * (N - 1)); }
+            function createSmallWorldNetwork(p = 0) { const N = 40; const K = 4; nodes = d3.range(N).map(i => ({id: i})); links = []; for (let i = 0; i < N; i++) { for (let j = 1; j <= K / 2; j++) { const target = (i + j) % N; links.push({source: i, target: target}); } } for (const link of links) { if (Math.random() < p) { const sourceNode = link.source; let newTarget; do { newTarget = Math.floor(Math.random() * N); } while (newTarget === sourceNode || links.some(l => (l.source === sourceNode && l.target === newTarget) || (l.source === newTarget && l.target === sourceNode))); link.target = newTarget; } } simulation.force("link").distance(30).strength(0.5); update(); }
+            function createScaleFreeNetwork() { nodes = [{ id: 0, degree: 1 }, { id: 1, degree: 1 }]; links = [{ source: 0, target: 1 }]; simulation.force("link").distance(50).strength(1); update(); }
+            function addScaleFreeNode() { if (currentModel !== 'scale-free' || nodes.length >= 100) return; const newNodeId = nodes.length; const newNode = { id: newNodeId, degree: 0 }; const targets = []; nodes.forEach(n => { for (let i = 0; i < n.degree; i++) { targets.push(n.id); } }); if (targets.length > 0) { const targetNodeId = targets[Math.floor(Math.random() * targets.length)]; const targetNode = nodes.find(n => n.id === targetNodeId); nodes.push(newNode); links.push({ source: newNodeId, target: targetNodeId }); newNode.degree++; targetNode.degree++; update(); } }
+            function update() { link = g.selectAll(".link").data(links, d => `${d.source.id ?? d.source}-${d.target.id ?? d.target}`); link.exit().remove(); const linkEnter = link.enter().append("line").attr("class", "link"); link = linkEnter.merge(link); node = g.selectAll(".node").data(nodes, d => d.id); node.exit().remove(); const nodeEnter = node.enter().append("circle").attr("class", "node").call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended)); nodeEnter.append("title").text(d => `Node ID: ${d.id}`); node = nodeEnter.merge(node); node.transition().duration(200).attr("r", d => currentModel === 'scale-free' ? 5 + Math.sqrt(d.degree) * 2 : 6); simulation.nodes(nodes).on("tick", ticked); simulation.force("link").links(links); simulation.alpha(1).restart(); const avgPathLength = calculateAveragePathLength(nodes, links); const statsDisplay = document.getElementById("avg-path-length-val"); if (avgPathLength === Infinity) { statsDisplay.textContent = "N/A"; } else { statsDisplay.textContent = avgPathLength.toFixed(2); } }
+            function ticked() { link.attr("x1", d => d.source.x).attr("y1", d => d.source.y).attr("x2", d => d.target.x).attr("y2", d => d.target.y); node.attr("cx", d => d.x).attr("cy", d => d.y); }
+            const smallWorldBtn = document.getElementById("small-world-btn"), scaleFreeBtn = document.getElementById("scale-free-btn"), smallWorldControls = document.getElementById("small-world-controls"), scaleFreeControls = document.getElementById("scale-free-controls"), slider = document.getElementById("rewire-slider"), pValueSpan = document.getElementById("p-value");
+            function setModel(model) { currentModel = model; if (model === 'small-world') { smallWorldBtn.classList.add('active'); scaleFreeBtn.classList.remove('active'); smallWorldControls.classList.remove('hidden'); scaleFreeControls.classList.add('hidden'); slider.value = 0; pValueSpan.textContent = "0.00"; createSmallWorldNetwork(0); } else { scaleFreeBtn.classList.add('active'); smallWorldBtn.classList.remove('active'); scaleFreeControls.classList.remove('hidden'); smallWorldControls.classList.add('hidden'); createScaleFreeNetwork(); } }
+            smallWorldBtn.addEventListener('click', () => setModel('small-world'));
+            scaleFreeBtn.addEventListener('click', () => setModel('scale-free'));
+            document.getElementById("add-node-btn").addEventListener("click", addScaleFreeNode);
+            document.getElementById("reset-btn").addEventListener("click", () => setModel(currentModel));
+            slider.addEventListener("input", (event) => { const p = +event.target.value; pValueSpan.textContent = p.toFixed(2); createSmallWorldNetwork(p); });
+            function dragstarted(event, d) { if (!event.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; }
+            function dragged(event, d) { d.fx = event.x; d.fy = event.y; }
+            function dragended(event, d) { if (!event.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; }
+            setModel('small-world');
+        }
+    });
+</script>
 
 </body>
 </html>
