@@ -219,51 +219,7 @@
                 </div>
             </div>
         </section>
-        
-        <!-- Interactive Simulation Section -->
-        <section id="simulation" class="py-20">
-            <div class="w-full max-w-4xl mx-auto text-center">
-                <h2 class="text-4xl font-bold text-taiwan-dark">Interactive Network Models</h2>
-                <p class="text-lg text-gray-600 mt-2">Choose a model to explore fundamental concepts in network science.</p>
-                
-                <div class="my-6">
-                    <!-- Model Selection Buttons -->
-                    <div class="inline-flex rounded-lg shadow-sm" role="group">
-                        <button id="small-world-btn" type="button" class="model-btn active rounded-l-lg border border-gray-200 bg-white text-sm font-medium px-4 py-2 text-gray-900 hover:bg-gray-100 focus:z-10 focus:ring-2 focus:ring-yellow-500">
-                            Small-World
-                        </button>
-                        <button id="scale-free-btn" type="button" class="model-btn -ml-px border border-gray-200 bg-white text-sm font-medium px-4 py-2 text-gray-900 hover:bg-gray-100 focus:z-10 focus:ring-2 focus:ring-yellow-500">
-                            Scale-Free
-                        </button>
-                        <button id="reset-btn" class="rounded-r-lg border border-gray-200 bg-gray-200 text-sm font-medium px-4 py-2 text-gray-800 hover:bg-gray-300 focus:z-10 focus:ring-2 focus:ring-yellow-500">
-                            Reset
-                        </button>
-                    </div>
-
-                    <!-- Contextual Controls -->
-                    <div id="controls-container" class="mt-4 h-12 flex items-center justify-center">
-                        <div id="small-world-controls" class="flex items-center justify-center space-x-4 w-full">
-                            <label for="rewire-slider" class="font-semibold">Rewire Probability (p):</label>
-                            <input id="rewire-slider" type="range" min="0" max="1" step="0.01" value="0" class="w-64">
-                            <span id="p-value" class="font-mono font-semibold w-12">0.00</span>
-                        </div>
-                        <div id="scale-free-controls" class="hidden w-full">
-                             <button id="add-node-btn" class="bg-taiwan-yellow text-white font-semibold px-6 py-2 rounded-full shadow-lg hover:bg-opacity-90 transform transition-all hover:scale-105">
-                                Add a Node
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Network Stats Display -->
-                     <div id="stats-container" class="mt-4 h-6 text-sm text-gray-600">
-                        <span>Average Path Length: <strong id="avg-path-length-val" class="font-mono text-lg text-taiwan-dark">...</strong></span>
-                    </div>
-                </div>
-        
-                <!-- This is where the D3 simulation will be rendered -->
-                <div id="simulation-canvas" class="simulation-container"></div>
-            </div>
-        </section>
+                  
 
     </main>
 
@@ -375,4 +331,5 @@
 
 </body>
 </html>
+
 
